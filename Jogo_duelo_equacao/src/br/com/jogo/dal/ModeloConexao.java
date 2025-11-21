@@ -9,13 +9,12 @@ package br.com.jogo.dal;
  *
  * @author Julimar
  */
-
 import java.sql.*;
 
 public class ModeloConexao {
-    
-    public static Connection conector(){
-        
+
+    public static Connection conector() {
+
         Connection conexao = null;
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/dbjogo";
@@ -29,7 +28,5 @@ public class ModeloConexao {
             System.out.println("ERRO: " + e);
             return null;
         }
-        
     }
-    
 }
