@@ -57,6 +57,11 @@ public class TelaInicial extends javax.swing.JFrame {
         btnRegras.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         btnRegras.setText("REGRAS");
         btnRegras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRegras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegrasActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnRegras);
         btnRegras.setBounds(129, 561, 274, 67);
 
@@ -67,6 +72,14 @@ public class TelaInicial extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(544, 767));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    TelaRegras regras = new TelaRegras();
+    
+    private void btnRegrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegrasActionPerformed
+        // Chamando o comando a tela de regras
+        regras.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnRegrasActionPerformed
 
     /**
      * @param args the command line arguments
