@@ -45,12 +45,22 @@ public class TelaInicial extends javax.swing.JFrame {
         btnCadastro.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         btnCadastro.setText("JOGAR");
         btnCadastro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCadastro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastroActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnCadastro);
         btnCadastro.setBounds(129, 348, 274, 67);
 
         btnPontos.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         btnPontos.setText("PONTOS");
         btnPontos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPontos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPontosActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnPontos);
         btnPontos.setBounds(129, 453, 274, 67);
 
@@ -74,12 +84,26 @@ public class TelaInicial extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     TelaRegras regras = new TelaRegras();
+    TelaPontos pontos = new TelaPontos();
+    TelaCadastroJogador jogador = new TelaCadastroJogador();
     
     private void btnRegrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegrasActionPerformed
-        // Chamando o comando a tela de regras
+        // Chamando a tela de regras
         regras.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegrasActionPerformed
+
+    private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
+        // Chamando a tela cadastro
+        jogador.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCadastroActionPerformed
+
+    private void btnPontosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPontosActionPerformed
+        // Chamando a tela pontos 
+        pontos.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnPontosActionPerformed
 
     /**
      * @param args the command line arguments
