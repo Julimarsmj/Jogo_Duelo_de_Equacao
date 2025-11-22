@@ -5,6 +5,9 @@
  */
 package br.com.jogo.telas;
 
+import java.util.Random;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Julimar
@@ -18,6 +21,88 @@ public class TelaPerguntas extends javax.swing.JFrame {
         initComponents();
     }
 
+    TelaRegras regras = new TelaRegras();
+    TelaPontos pontos = new TelaPontos();
+    TelaCadastroJogador jogador = new TelaCadastroJogador();
+
+    Random rand = new Random();
+
+    int n1 = 0, n2 = 0, operacao = 0, ponto = 0;
+    float resultado = 0, respostaUsuario = 0;
+
+    int contadorPerguntas = 0;
+    final int MAX_PERGUNTAS = 9;
+
+    public void aleatorio() {
+        n1 = rand.nextInt(10) + 1;
+        n2 = rand.nextInt(10) + 1;
+        operacao = rand.nextInt(4) + 1;
+    }
+
+    public void perguntas() {
+        aleatorio();
+        if (operacao == 1) {
+            lblPergunta.setText(n1 + " + " + n2 + "?");
+        }
+        if (operacao == 2) {
+            lblPergunta.setText(n1 + " - " + n2 + "?");
+        }
+        if (operacao == 3) {
+            lblPergunta.setText(n1 + " x " + n2 + "?");
+        }
+        if (operacao == 4) {
+            lblPergunta.setText(n1 + " / " + n2 + "?");
+        }
+    }
+
+    public float calculoRespostaCorreta() {
+        switch (operacao) {
+            case 1:
+                return n1 + n2;
+            case 2:
+                return n1 - n2;
+            case 3:
+                return n1 * n2;
+            case 4:
+                return (float) n1 / n2;
+            default:
+                return 0;
+        }
+    }
+
+    public void verificandoRespostaCerta() {
+
+        try {
+            String textoResposta = txtResposta.getText().trim().replace(",", ".");
+            respostaUsuario = Float.parseFloat(textoResposta);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "DIGITE UM NÚMERO VÁLIDO", "ATENÇÃO", JOptionPane.WARNING_MESSAGE);
+            txtResposta.requestFocus();
+            return;
+        }
+
+        float resultadoCorreto = calculoRespostaCorreta();
+        if (Math.abs(respostaUsuario - resultadoCorreto) < 0.0001f) {
+            ponto += 1;
+            JOptionPane.showMessageDialog(null, "Acertou! Pontos: " + ponto);
+        } else {
+            ponto -= 1;
+            JOptionPane.showMessageDialog(null, "Errou! O correto era: " + resultadoCorreto + ". Pontos: " + ponto);
+        }
+        if (contadorPerguntas < MAX_PERGUNTAS) {
+            contadorPerguntas++;
+            txtResposta.setText("");
+            perguntas();
+        } else {
+            JOptionPane.showMessageDialog(null, "FIM DO JOGO! Sua Pontuação Final é: " + ponto);
+            txtResposta.setText(null);
+            lblPergunta.setText(null);
+            TelaInicial inicial = new TelaInicial();
+            inicial.setVisible(true);
+            this.setVisible(false);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,25 +112,63 @@ public class TelaPerguntas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lblPergunta = new javax.swing.JLabel();
+        txtResposta = new javax.swing.JTextField();
+        btnConfirmar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Duelo de Equação - Página Principal");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
         getContentPane().setLayout(null);
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/img/teacher.png"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
+
+        lblPergunta.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jPanel1.add(lblPergunta, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, 210, 90));
+
+        txtResposta.setFont(new java.awt.Font("Dialog", 0, 36)); // NOI18N
+        jPanel1.add(txtResposta, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 230, 50));
+
+        btnConfirmar.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnConfirmar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, -1, -1));
+
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(20, 170, 490, 430);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/img/background.jpg"))); // NOI18N
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(-120, -10, 670, 750);
+        jLabel2.setBounds(-170, 0, 750, 750);
 
         setSize(new java.awt.Dimension(544, 767));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    TelaRegras regras = new TelaRegras();
-    TelaPontos pontos = new TelaPontos();
-    TelaCadastroJogador jogador = new TelaCadastroJogador();
-    
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        verificandoRespostaCerta();
+    }//GEN-LAST:event_btnConfirmarActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // Comando para função pergunta
+        perguntas();
+    }//GEN-LAST:event_formWindowActivated
+
     /**
      * @param args the command line arguments
      */
@@ -83,6 +206,11 @@ public class TelaPerguntas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConfirmar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblPergunta;
+    private javax.swing.JTextField txtResposta;
     // End of variables declaration//GEN-END:variables
 }
