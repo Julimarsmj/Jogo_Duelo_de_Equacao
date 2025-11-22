@@ -33,12 +33,14 @@ public class TelaPerguntas extends javax.swing.JFrame {
     int contadorPerguntas = 0;
     final int MAX_PERGUNTAS = 9;
 
+    // Função para sortear números aleatorio
     public void aleatorio() {
         n1 = rand.nextInt(10) + 1;
         n2 = rand.nextInt(10) + 1;
         operacao = rand.nextInt(4) + 1;
     }
 
+    // Função para mostrar as perguntas 
     public void perguntas() {
         aleatorio();
         if (operacao == 1) {
@@ -55,6 +57,7 @@ public class TelaPerguntas extends javax.swing.JFrame {
         }
     }
 
+    // Função fazer o calculo correto 
     public float calculoRespostaCorreta() {
         switch (operacao) {
             case 1:
@@ -64,12 +67,14 @@ public class TelaPerguntas extends javax.swing.JFrame {
             case 3:
                 return n1 * n2;
             case 4:
-                return (float) n1 / n2;
+                resultado = (float) n1 / n2;
+                return Math.round(resultado * 10) / 10.0f; 
             default:
                 return 0;
         }
     }
 
+    // Teste para verificar a resposta correta
     public void verificandoRespostaCerta() {
 
         try {
@@ -84,11 +89,22 @@ public class TelaPerguntas extends javax.swing.JFrame {
         float resultadoCorreto = calculoRespostaCorreta();
         if (Math.abs(respostaUsuario - resultadoCorreto) < 0.0001f) {
             ponto += 1;
-            JOptionPane.showMessageDialog(null, "Acertou! Pontos: " + ponto);
+            JOptionPane.showMessageDialog(null, "Acertou!");
+            lblPontos.setText(String.valueOf(ponto));
         } else {
             ponto -= 1;
-            JOptionPane.showMessageDialog(null, "Errou! O correto era: " + resultadoCorreto + ". Pontos: " + ponto);
+            JOptionPane.showMessageDialog(null, "Errou! O correto era: " + resultadoCorreto);
+            lblPontos.setText(String.valueOf(ponto));
         }
+
+        // Colocar a cor nos pontos
+        if (ponto < 0) {
+            lblPontos.setForeground(java.awt.Color.RED);
+        } else {
+            lblPontos.setForeground(java.awt.Color.BLUE);
+        }
+
+        // Contagem para terminar o jogo
         if (contadorPerguntas < MAX_PERGUNTAS) {
             contadorPerguntas++;
             txtResposta.setText("");
@@ -117,6 +133,8 @@ public class TelaPerguntas extends javax.swing.JFrame {
         lblPergunta = new javax.swing.JLabel();
         txtResposta = new javax.swing.JTextField();
         btnConfirmar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        lblPontos = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -142,12 +160,21 @@ public class TelaPerguntas extends javax.swing.JFrame {
 
         btnConfirmar.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         btnConfirmar.setText("Confirmar");
+        btnConfirmar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnConfirmarActionPerformed(evt);
             }
         });
         jPanel1.add(btnConfirmar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel3.setText("Pontos:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, -1, -1));
+
+        lblPontos.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        lblPontos.setText("-");
+        jPanel1.add(lblPontos, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, -1, -1));
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(20, 170, 490, 430);
@@ -156,11 +183,12 @@ public class TelaPerguntas extends javax.swing.JFrame {
         getContentPane().add(jLabel2);
         jLabel2.setBounds(-170, 0, 750, 750);
 
-        setSize(new java.awt.Dimension(544, 767));
+        setSize(new java.awt.Dimension(545, 767));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        txtResposta.requestFocus();
         verificandoRespostaCerta();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
@@ -209,8 +237,10 @@ public class TelaPerguntas extends javax.swing.JFrame {
     private javax.swing.JButton btnConfirmar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblPergunta;
+    private javax.swing.JLabel lblPontos;
     private javax.swing.JTextField txtResposta;
     // End of variables declaration//GEN-END:variables
 }
