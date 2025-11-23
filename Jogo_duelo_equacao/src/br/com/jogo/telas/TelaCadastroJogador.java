@@ -22,6 +22,8 @@ public class TelaCadastroJogador extends javax.swing.JFrame {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
+    public static int idJogadorAtual = 0;
+
     public TelaCadastroJogador() {
         initComponents();
         conexao = ModeloConexao.conector();
@@ -86,18 +88,30 @@ public class TelaCadastroJogador extends javax.swing.JFrame {
             txtCadJogador.requestFocus();
         } else {
             String sql = "insert into tbjogador (nomejogador) values (?)";
-            try {
-                pst = conexao.prepareStatement(sql);
+            try (Connection conexaoAtual = ModeloConexao.conector();
+                    java.sql.PreparedStatement pst = conexaoAtual.prepareStatement(
+                            sql,
+                            java.sql.Statement.RETURN_GENERATED_KEYS
+                    )) {
+
                 pst.setString(1, txtCadJogador.getText().trim().toUpperCase());
                 int adicionar = pst.executeUpdate();
+
                 if (adicionar > 0) {
+                    try (java.sql.ResultSet rs = pst.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            idJogadorAtual = rs.getInt(1);
+                            System.out.println("ID do Jogador Capturado: " + idJogadorAtual);
+                        }
+                    }
+
                     JOptionPane.showMessageDialog(null, "JOGADOR CADASTRADO COM SUCESSO!");
                     TelaPerguntas perguntas = new TelaPerguntas();
                     perguntas.setVisible(true);
                     this.setVisible(false);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "INFORME O NOME DO JOGADOR" + e + JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "ERRO NO CADASTRO/CONEXÃO: " + e.getMessage(), "ATENÇÃO", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
