@@ -7,6 +7,9 @@ package br.com.jogo.telas;
 
 import java.util.Random;
 import javax.swing.JOptionPane;
+import java.sql.*;
+import br.com.jogo.dal.ModeloConexao;
+import br.com.jogo.telas.TelaCadastroJogador;
 
 /**
  *
@@ -21,11 +24,8 @@ public class TelaPerguntas extends javax.swing.JFrame {
         initComponents();
     }
 
-    TelaRegras regras = new TelaRegras();
-    TelaPontos pontos = new TelaPontos();
-    TelaCadastroJogador jogador = new TelaCadastroJogador();
-
     Random rand = new Random();
+    
 
     int n1 = 0, n2 = 0, operacao = 0, ponto = 0;
     float resultado = 0, respostaUsuario = 0;
@@ -111,6 +111,7 @@ public class TelaPerguntas extends javax.swing.JFrame {
             perguntas();
         } else {
             JOptionPane.showMessageDialog(null, "FIM DO JOGO! Sua Pontuação Final é: " + ponto);
+            salvarPontuacaoFinal();
             txtResposta.setText(null);
             lblPergunta.setText(null);
             TelaInicial inicial = new TelaInicial();
@@ -119,6 +120,42 @@ public class TelaPerguntas extends javax.swing.JFrame {
         }
     }
 
+    public void salvarPontuacaoFinal() {
+    
+    // O comando UPDATE atualiza a coluna 'total' na linha específica do jogador.
+    String sql = "UPDATE tbjogador SET total = ? WHERE id = ?"; 
+    
+    // Verifica se o ID foi capturado. Se for 0, houve erro no cadastro inicial.
+    if (TelaCadastroJogador.idJogadorAtual == 0) {
+        JOptionPane.showMessageDialog(null, "ERRO CRÍTICO: ID do jogador não foi encontrado para salvar a pontuação.", "Erro de Persistência", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Tenta conectar e executar a atualização
+    try (Connection conexao = ModeloConexao.conector(); // Use seu método de conexão
+         java.sql.PreparedStatement pst = conexao.prepareStatement(sql)) {
+        
+        // 1. Define o valor da pontuação final (Primeiro '?')
+        pst.setInt(1, ponto); 
+        
+        // 2. Define o ID da linha a ser atualizada (Segundo '?')
+        pst.setInt(2,TelaCadastroJogador.idJogadorAtual); 
+        
+        // Executa o UPDATE
+        int linhasAfetadas = pst.executeUpdate();
+        
+        if (linhasAfetadas > 0) {
+            System.out.println("Pontuação final (" + ponto + ") salva com sucesso para o ID: " + TelaCadastroJogador.idJogadorAtual);
+        } else {
+            System.out.println("Atenção: Nenhuma linha atualizada. ID pode não existir.");
+        }
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao atualizar pontuação no banco: " + e.getMessage(), "Erro de Banco", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
